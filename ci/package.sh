@@ -56,7 +56,7 @@ do
                         appsody_cmd="appsody stack package"
                         echo -e "\n- PACKAGING stack: $repo_name/$stack_id"
                     else
-                        appsody_cmd="appsody stack validate"
+                        appsody_cmd="appsody stack validate -v"
                         echo -e "\n- VALIDATING stack: $repo_name/$stack_id"
                     fi
                     
