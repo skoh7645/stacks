@@ -9,6 +9,11 @@ dist: bionic
 services:
   - docker
 
+addons:
+  apt:
+    packages:
+      - docker-ce
+      
 before_script:
   - docker --version
   - ./ci/download_cli.sh
