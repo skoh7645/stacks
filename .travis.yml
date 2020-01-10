@@ -10,6 +10,7 @@ services:
   - docker
 
 before_script:
+  - docker --version
   - ./ci/download_cli.sh
 
 script:
