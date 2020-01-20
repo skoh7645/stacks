@@ -5,22 +5,16 @@ go:
 
 os: linux
 dist: bionic
-
-services:
-  - docker
   
 matrix:
   include:
-    - before-script:
-      - ./ci/download_cli.sh
+    - services: docker
     - before_script:
       - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
       - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
       - sudo apt-get update
       - apt-cache madison docker-ce
       - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
-      - docker --version
-      - ./ci/download_cli.sh
     - if: $(. ./ci/minimum_docker_version.sh) != ""
       - before_script:
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -28,8 +22,10 @@ matrix:
         - sudo apt-get update
         - apt-cache madison docker-ce
         - sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-engine=$(. ./ci/minimum_docker_version.sh)
-        - docker --version
-        - ./ci/download_cli.sh
+
+before-script:
+  - docker --version
+  - ./ci/download_cli.sh
 
 script:
   - . ./ci/build.sh
