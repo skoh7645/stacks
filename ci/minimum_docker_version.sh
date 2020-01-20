@@ -2,7 +2,11 @@
 
 . $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/list.sh
 
+echo $STACKS_LIST
+
 numberofstacks=$(echo $STACKS_LIST | awk -F' ' '{ print NF }')
+
+echo $numberofstacks
 
 if [ $numberofstacks == 1 ]
 then
