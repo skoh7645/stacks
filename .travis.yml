@@ -6,12 +6,15 @@ go:
 os: linux
 dist: bionic
 
+env:
+  - MIN_DOCKER=$(. ./ci/minimum_docker_version.sh)
+
 matrix:
   include:
     - services: docker
     - install: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && sudo apt-get update && apt-cache madison docker-ce && sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce 
-    - if: $(. ./ci/minimum_docker_version.sh) != ""
-      install: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && sudo apt-get update && apt-cache madison docker-ce && sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-ce=$(. ./ci/minimum_docker_version.sh)
+    - if: env(MIN_DOCKER) != ""
+      install: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && sudo apt-get update && apt-cache madison docker-ce && sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-ce=$MIN_DOCKER
 
 before-script: 
   - docker --version
