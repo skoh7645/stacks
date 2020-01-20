@@ -19,7 +19,7 @@ matrix:
   include:
     - services: docker
     - install: sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce 
-    - if: env(MIN_DOCKER) == ""
+    - if: env(MIN_DOCKER) != ""
       install: sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-engine=env(MIN_DOCKER)
 
 before-script: 
