@@ -1,6 +1,7 @@
-#. $script_dir./list.sh
+#!/bin/bash
 
-export STACKS_LIST="incubator/java-openliberty"
+. $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/list.sh
+
 numberofstacks=$(echo $STACKS_LIST | awk -F' ' '{ print NF }')
 
 if [ $numberofstacks == 1 ]
