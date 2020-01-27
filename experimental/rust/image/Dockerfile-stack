@@ -7,7 +7,7 @@ ENV CARGO_HOME=/usr/local/cargo/deps
 RUN useradd -m rust_user && groupadd rust_group
 
 USER root
-RUN mkdir -p /project/user-app && chown rust_user:rust_group /project/user-app
+RUN mkdir -p /project/user-app && chown -R rust_user:rust_group /project/user-app
 
 USER rust_user
 RUN mkdir -p $CARGO_HOME 
