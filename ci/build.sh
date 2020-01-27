@@ -35,6 +35,7 @@ then
   STACKS_LIST=$stack_no_slash
 fi
 
+export STACKS_LIST="experimental/rust"
 if [ -z "$STACKS_LIST" ]
 then
   . $script_dir/list.sh
