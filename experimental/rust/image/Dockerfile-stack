@@ -4,14 +4,10 @@ RUN apt-get update && apt-get install -y lldb
 
 ENV CARGO_HOME=/usr/local/cargo/deps
 
-RUN  groupadd --gid 1000 rust_group \
-  && useradd --uid 1000 --gid rust_group --shell /bin/bash --create-home rust_user \
-  && mkdir -p $CARGO_HOME \
-  && chown -R rust_user:rust_group $CARGO_HOME
+RUN useradd -m rust_user && groupadd rust_group
 
 USER rust_user
-
-WORKDIR /project/user-app
+RUN mkdir -p $CARGO_HOME /project/user-app
 
 ENV APPSODY_PROJECT_DIR="/project"
 
@@ -34,6 +30,8 @@ ENV APPSODY_DEBUG_KILL=true
 COPY --chown=rust_user:rust_group ./LICENSE /licenses
 COPY --chown=rust_user:rust_group ./project /project
 COPY --chown=rust_user:rust_group ./config /config
+
+WORKDIR /project/user-app
 
 ENV PORT=8000
 
