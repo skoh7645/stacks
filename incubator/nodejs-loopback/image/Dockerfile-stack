@@ -1,6 +1,10 @@
 FROM appsody/nodejs:0.3
 
-ENV APPSODY_MOUNTS=/:/project/user-app
+RUN useradd --gid 0 --create-home node_user \
+ && mkdir -p /project/user-app/node_modules \
+ && chown -R node_user:0 /project/user-app/node_modules
+
+ENV APPSODY_MOUNTS=.:/project/user-app
 ENV APPSODY_DEPS=/project/user-app/node_modules
 
 ENV APPSODY_WATCH_DIR=/project/user-app
@@ -24,9 +28,15 @@ ENV APPSODY_TEST_KILL=false
 
 COPY ./LICENSE /licenses/
 COPY ./project /project
-COPY ./config /config
+COPY --chown=node_user:0 ./config /config
+
 WORKDIR /project
-RUN npm install && npm run pretest
+RUN npm install \
+ && npm run pretest
+
+RUN chown -R node_user:0 /project
+
+USER node_user
 
 ENV PORT=3000
 ENV NODE_PATH=/project/user-app/node_modules
