@@ -5,8 +5,7 @@ FROM node:12
 RUN apt-get update \
  && apt-get dist-upgrade -y \
  && apt-get clean \
- && echo 'Finished installing dependencies' \
- && useradd --gid 0 --create-home node_user
+ && echo 'Finished installing dependencies'
 
 # Install stack dependencies
 WORKDIR /project
@@ -31,19 +30,16 @@ RUN apt-get update \
  && echo 'Finished installing dependencies'
 
 # Copy the project
-COPY . /project
+COPY --chown=node:node . /project
 
 # Copy all dependencies
-COPY --from=0 /project/node_modules /project/node_modules
-COPY --from=0 /project/user-app/node_modules /project/user-app/node_modules
+COPY --chown=node:node --from=0 /project/node_modules /project/node_modules
+COPY --chown=node:node --from=0 /project/user-app/node_modules /project/user-app/node_modules
 
 WORKDIR /project
 
 # Make sure TypeScript source code is transpiled
-RUN npm run build \
- && npm run build --prefix user-app \
- && chown -R node:0 /project \
- && chmod -R g=u /project 
+RUN npm run build && npm run build --prefix user-app
 
 ENV NODE_ENV production
 ENV PORT 3000

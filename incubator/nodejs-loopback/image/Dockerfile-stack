@@ -1,10 +1,11 @@
 FROM appsody/nodejs:0.3
 
-RUN useradd --gid 0 --create-home node_user \
- && mkdir -p /project/user-app/node_modules \
- && chown -R node_user:0 /project/user-app/node_modules
+RUN groupadd node_group \
+&& useradd -m -g node_group --create-home node_user \
+&& mkdir -p /project/user-app/node_modules \
+&& chown -R node_user:node_group /project/user-app/node_modules
 
-ENV APPSODY_MOUNTS=.:/project/user-app
+ENV APPSODY_MOUNTS=/:/project/user-app
 ENV APPSODY_DEPS=/project/user-app/node_modules
 
 ENV APPSODY_WATCH_DIR=/project/user-app
@@ -27,14 +28,14 @@ ENV APPSODY_TEST_ON_CHANGE=""
 ENV APPSODY_TEST_KILL=false
 
 COPY ./LICENSE /licenses/
-COPY ./project /project
-COPY --chown=node_user:0 ./config /config
+COPY  ./project /project
+COPY --chown=node_user:node_group ./config /config
 
 WORKDIR /project
-RUN npm install \
- && npm run pretest
+RUN npm install && npm run pretest
 
-RUN chown -R node_user:0 /project
+RUN chown -R node_user:node_group /project \
+  && chmod -R g=u /project
 
 USER node_user
 
